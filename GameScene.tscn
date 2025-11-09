@@ -1,0 +1,61 @@
+[gd_scene load_steps=8 format=3 uid="uid://cj2f2ype27w1h"]
+
+[ext_resource type="Script" uid="uid://dnk7td7k6w6q7" path="res://GameScene.gd" id="1_eqhe0"]
+[ext_resource type="Texture2D" uid="uid://ym8vidgrt0k3" path="res://assets/background/3.png" id="2_haeiw"]
+[ext_resource type="Texture2D" uid="uid://cnauqot2ufils" path="res://assets/pet/lv1/Idle.png" id="2_k77ap"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_haeiw"]
+atlas = ExtResource("2_k77ap")
+region = Rect2(0, 0, 192, 161)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b5kf5"]
+atlas = ExtResource("2_k77ap")
+region = Rect2(192, 0, 192, 161)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hvuor"]
+atlas = ExtResource("2_k77ap")
+region = Rect2(384, 0, 192, 161)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_i2arf"]
+animations = [{
+"frames": [],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_haeiw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b5kf5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hvuor")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 3.0
+}]
+
+[node name="GameScene" type="Node2D"]
+script = ExtResource("1_eqhe0")
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer"]
+position = Vector2(288.25, 162.25)
+scale = Vector2(0.2997396, 0.29953703)
+texture = ExtResource("2_haeiw")
+
+[node name="PetSprite" type="AnimatedSprite2D" parent="."]
+position = Vector2(288, 208)
+scale = Vector2(0.35727036, 0.35694855)
+sprite_frames = SubResource("SpriteFrames_i2arf")
+animation = &"idle"
+frame = 1
+frame_progress = 0.9693682
+
+[node name="Hatching" type="AnimationPlayer" parent="."]

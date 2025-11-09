@@ -1,56 +1,41 @@
-# GameScene.gd
-extends Node2D
+extends Node
 
-@onready var pet = $Pet
-@onready var hunger_bar = $GameUI/VBoxContainer/HungerHBox/HungerBar
-@onready var happiness_bar = $GameUI/VBoxContainer/HappinessHBox/HappinessBar
-@onready var energy_bar = $GameUI/VBoxContainer/EnergyHBox/EnergyBar
+const SAVE_PATH = "user://uiy_topia.save"
 
-@onready var level_bar = $GameUI/VBoxContainer2/Experience/ExpBar
-
-func _process(delta: float) -> void:
-	# Update UI based on pet's stats every frame
-	update_ui()
-
-func update_ui():
-	hunger_bar.value = pet.hungry
-	happiness_bar.value = pet.happiness
-	energy_bar.value = pet.energy
-	
-	level_bar.value = pet.experience
-
-
-func _on_feed_a_button_pressed() -> void:
-	pet.feed("A")
-
-
-func _on_feed_b_button_pressed() -> void:
-	pet.feed("B")
-
-
-func _on_feed_c_button_pressed() -> void:
-	pet.feed("C")
-
-
-var game_data: Dictionary = {}
+@onready var cutscene = $Hatching
+@onready var pet = $PetSprite
 
 func _ready():
-	# Load game data on startup
-	game_data = SaveManager.load_game()
-	
-	if game_data.size() > 0:
-		# If data exists (Continue was pressed)
-		pet.apply_load_data(game_data)
-		print("Game Data Applied.")
-	# Else: (New Game) Pet starts with default values (100)
-	
-	# Ensure UI is updated
-	update_ui()
+	var is_first_time = not FileAccess.file_exists(SAVE_PATH)
+	_on_cutscene_finished()
+	#if is_first_time:
+		#print("🐣 First time playing — show hatching cutscene!")
+		#pet.visible = false
+		#play_hatching_cutscene()
+	#else:
+		#print("➡️ Save found — loading game directly.")
+		#load_pet_state()
 
+func play_hatching_cutscene():
+	# Example: if Cutscene is an AnimationPlayer
+	cutscene.play("hatch")
 
-# Save when the game is about to close
-func _notification(what):
-	if what == NOTIFICATION_WM_CLOSE_REQUEST:
-		var data_to_save = pet.get_save_data()
-		SaveManager.save_game(data_to_save)
-		get_tree().quit()
+	# Wait for the animation to finish, then call _on_cutscene_finished
+	await cutscene.animation_finished
+	_on_cutscene_finished()
+
+func _on_cutscene_finished():
+	# After the egg hatches
+	pet.visible = true
+	pet.play("idle")
+	save_game()
+
+func load_pet_state():
+	# Here you’d read from your save file and update the pet
+	pet.visible = true
+	pet.texture = load("res://assets/pet_level1.png") # placeholder
+
+func save_game():
+	var file = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
+	file.store_line("pet_level=1")
+	file.close()
