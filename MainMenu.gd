@@ -5,14 +5,14 @@ extends Control
 
 func _ready():
 	# Use for Test First Time Flow
-	var path = "user://uiy_topia.save"
-	if FileAccess.file_exists(path):
-		var dir = DirAccess.open("user://")
-		if dir:
-			dir.remove("uiy_topia.save")
-			print("✅ Save file removed:", path)
-	else:
-		print("ℹ️ No save file found to remove.")
+	#var path = "user://uiy_topia.save"
+	#if FileAccess.file_exists(path):
+		#var dir = DirAccess.open("user://")
+		#if dir:
+			#dir.remove("uiy_topia.save")
+			#print("✅ Save file removed:", path)
+	#else:
+		#print("ℹ️ No save file found to remove.")
 	# ####################################################################
 	
 	start_button.pressed.connect(_on_start_button_pressed)
