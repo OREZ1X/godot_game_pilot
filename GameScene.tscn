@@ -1,13 +1,47 @@
-[gd_scene load_steps=19 format=3 uid="uid://cj2f2ype27w1h"]
+[gd_scene load_steps=36 format=3 uid="uid://cj2f2ype27w1h"]
 
 [ext_resource type="Script" uid="uid://dnk7td7k6w6q7" path="res://GameScene.gd" id="1_eqhe0"]
 [ext_resource type="Texture2D" uid="uid://ym8vidgrt0k3" path="res://assets/background/3.png" id="2_haeiw"]
 [ext_resource type="Texture2D" uid="uid://8nahllvcxesi" path="res://assets/pet/otto/Idle.png" id="3_b5kf5"]
+[ext_resource type="Texture2D" uid="uid://dved64mjb3wt7" path="res://assets/pet/otto/Eat.png" id="3_l6ya2"]
 [ext_resource type="Texture2D" uid="uid://cmn1ev5w12km0" path="res://assets/pet/otto/No.png" id="4_1kil2"]
 [ext_resource type="VideoStream" uid="uid://b81yt1j6juc5s" path="res://assets/cutscene/hatching.ogv" id="4_b5kf5"]
 [ext_resource type="Texture2D" uid="uid://3i7i5lglbxjh" path="res://assets/pet/otto/Cry.png" id="5_5cvvu"]
 [ext_resource type="Texture2D" uid="uid://80onf75rw1dg" path="res://assets/pet/otto/Sleep.png" id="6_ed8b8"]
 [ext_resource type="Texture2D" uid="uid://cse16xf856mir" path="res://assets/Start.png" id="8_l6ya2"]
+[ext_resource type="Texture2D" uid="uid://f7q1lotfp23x" path="res://assets/Exit.png" id="9_oieil"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rb7ul"]
+atlas = ExtResource("3_l6ya2")
+region = Rect2(0, 0, 352, 389)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icjtl"]
+atlas = ExtResource("3_l6ya2")
+region = Rect2(352, 0, 352, 389)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sao6o"]
+atlas = ExtResource("3_l6ya2")
+region = Rect2(704, 0, 352, 389)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6qjax"]
+atlas = ExtResource("3_l6ya2")
+region = Rect2(1056, 0, 352, 389)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_88a4u"]
+atlas = ExtResource("3_l6ya2")
+region = Rect2(1408, 0, 352, 389)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0ptlf"]
+atlas = ExtResource("3_l6ya2")
+region = Rect2(1760, 0, 352, 389)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k8u5j"]
+atlas = ExtResource("3_l6ya2")
+region = Rect2(2112, 0, 352, 389)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0p1ba"]
+atlas = ExtResource("3_l6ya2")
+region = Rect2(2464, 0, 352, 389)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_hvuor"]
 atlas = ExtResource("3_b5kf5")
@@ -51,6 +85,35 @@ animations = [{
 "loop": true,
 "name": &"default",
 "speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rb7ul")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_icjtl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sao6o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6qjax")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_88a4u")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0ptlf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k8u5j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0p1ba")
+}],
+"loop": false,
+"name": &"eating",
+"speed": 2.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -112,6 +175,125 @@ animations = [{
 "speed": 3.0
 }]
 
+[sub_resource type="Animation" id="Animation_ex6dp"]
+resource_name = "Eating"
+length = 1.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PetSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.033333335, 2.2333333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [&"eating", &"eating"]
+}
+
+[sub_resource type="Animation" id="Animation_4fxa8"]
+resource_name = "Idle"
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PetSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.03333333, 1.9666667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [&"idle", &"idle"]
+}
+
+[sub_resource type="Animation" id="Animation_0exr2"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PetSprite:idle")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [null]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("PetSprite:animation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"idle"]
+}
+
+[sub_resource type="Animation" id="Animation_l6ya2"]
+resource_name = "No"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PetSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1.6),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [&"no", &"no"]
+}
+
+[sub_resource type="Animation" id="Animation_oieil"]
+resource_name = "Sad"
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PetSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1.9666667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [&"sad", &"sad"]
+}
+
+[sub_resource type="Animation" id="Animation_cg2kh"]
+resource_name = "Sleep"
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PetSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1.9666667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [&"sleep", &"sleep"]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_cg2kh"]
+_data = {
+&"Eating": SubResource("Animation_ex6dp"),
+&"Idle": SubResource("Animation_4fxa8"),
+&"No": SubResource("Animation_l6ya2"),
+&"RESET": SubResource("Animation_0exr2"),
+&"Sad": SubResource("Animation_oieil"),
+&"Sleep": SubResource("Animation_cg2kh")
+}
+
 [node name="GameScene" type="Node2D"]
 script = ExtResource("1_eqhe0")
 
@@ -128,7 +310,13 @@ texture = ExtResource("2_haeiw")
 position = Vector2(288, 208)
 scale = Vector2(0.35727036, 0.35694855)
 sprite_frames = SubResource("SpriteFrames_i2arf")
-animation = &"no"
+animation = &"idle"
+
+[node name="AnimPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_cg2kh")
+}
+speed_scale = 0.413
 
 [node name="UI" type="Control" parent="."]
 layout_mode = 3
@@ -140,8 +328,11 @@ offset_bottom = 324.0
 custom_minimum_size = Vector2(50, 10)
 layout_direction = 1
 layout_mode = 0
-offset_right = 254.0
-offset_bottom = 19.0
+offset_left = 501.0
+offset_top = 296.0
+offset_right = 870.0
+offset_bottom = 424.0
+scale = Vector2(0.2, 0.2)
 texture_under = ExtResource("8_l6ya2")
 texture_progress = ExtResource("8_l6ya2")
 tint_under = Color(0.0018675321, 0.0018147645, 0.0019523961, 1)
@@ -150,8 +341,22 @@ tint_progress = Color(0.5101858, 0.7633715, 0.20088884, 1)
 
 [node name="SleepBar" type="TextureProgressBar" parent="UI"]
 layout_mode = 0
-offset_right = 272.0
-offset_bottom = 21.0
+offset_left = 501.99997
+offset_top = 266.99997
+offset_right = 871.0
+offset_bottom = 394.99997
+scale = Vector2(0.2, 0.2)
+texture_under = ExtResource("8_l6ya2")
+texture_progress = ExtResource("8_l6ya2")
+
+[node name="TextureButton" type="TextureButton" parent="UI"]
+layout_mode = 0
+offset_left = 0.99999994
+offset_top = 296.99997
+offset_right = 128.0
+offset_bottom = 427.99997
+scale = Vector2(0.2, 0.2)
+texture_normal = ExtResource("9_oieil")
 
 [node name="FadeRect" type="ColorRect" parent="."]
 visible = false
@@ -164,9 +369,12 @@ size_flags_vertical = 3
 color = Color(0, 0, 0, 1)
 
 [node name="CutscenePlayer" type="VideoStreamPlayer" parent="."]
+visible = false
 offset_left = -2.0
 offset_right = 576.0
 offset_bottom = 324.0
 stream = ExtResource("4_b5kf5")
 autoplay = true
 expand = true
+
+[connection signal="pressed" from="UI/TextureButton" to="." method="_on_texture_button_pressed"]
