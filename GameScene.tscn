@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://cj2f2ype27w1h"]
+[gd_scene load_steps=41 format=3 uid="uid://cj2f2ype27w1h"]
 
 [ext_resource type="Script" uid="uid://dnk7td7k6w6q7" path="res://GameScene.gd" id="1_eqhe0"]
 [ext_resource type="Texture2D" uid="uid://ym8vidgrt0k3" path="res://assets/background/3.png" id="2_haeiw"]
@@ -8,8 +8,13 @@
 [ext_resource type="VideoStream" uid="uid://b81yt1j6juc5s" path="res://assets/cutscene/hatching.ogv" id="4_b5kf5"]
 [ext_resource type="Texture2D" uid="uid://3i7i5lglbxjh" path="res://assets/pet/otto/Cry.png" id="5_5cvvu"]
 [ext_resource type="Texture2D" uid="uid://80onf75rw1dg" path="res://assets/pet/otto/Sleep.png" id="6_ed8b8"]
-[ext_resource type="Texture2D" uid="uid://cse16xf856mir" path="res://assets/Start.png" id="8_l6ya2"]
-[ext_resource type="Texture2D" uid="uid://f7q1lotfp23x" path="res://assets/Exit.png" id="9_oieil"]
+[ext_resource type="Texture2D" uid="uid://ck1lejvn7uf3t" path="res://assets/button/HungryBar/HungryBar1.png" id="8_cg2kh"]
+[ext_resource type="Texture2D" uid="uid://cwwp0tln13x3n" path="res://assets/button/HungryBar/HungryBar3.png" id="9_rb7ul"]
+[ext_resource type="Texture2D" uid="uid://b0fj5oq8oct1e" path="res://assets/button/HungryBar/HungryBar2.png" id="10_icjtl"]
+[ext_resource type="Texture2D" uid="uid://dxkb2vs3f4cdl" path="res://assets/button/SleepBar/SleepBar1.png" id="11_sao6o"]
+[ext_resource type="Texture2D" uid="uid://cu2yiil71qi6o" path="res://assets/button/SleepBar/SleepBar3.png" id="12_6qjax"]
+[ext_resource type="Texture2D" uid="uid://xw0nukwu3e05" path="res://assets/button/SleepBar/SleepBar2.png" id="13_88a4u"]
+[ext_resource type="Texture2D" uid="uid://cm7fwrfcdji7p" path="res://assets/button/Food1.png" id="14_0ptlf"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_rb7ul"]
 atlas = ExtResource("3_l6ya2")
@@ -185,7 +190,7 @@ tracks/0/path = NodePath("PetSprite:animation")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0.033333335, 2.2333333),
+"times": PackedFloat32Array(0.033333335, 1.7),
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
 "values": [&"eating", &"eating"]
@@ -206,6 +211,21 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
 "values": [&"idle", &"idle"]
+}
+
+[sub_resource type="Animation" id="Animation_l6ya2"]
+resource_name = "No"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PetSprite:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1.6),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [&"no", &"no"]
 }
 
 [sub_resource type="Animation" id="Animation_0exr2"]
@@ -233,21 +253,6 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [&"idle"]
-}
-
-[sub_resource type="Animation" id="Animation_l6ya2"]
-resource_name = "No"
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("PetSprite:animation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.6),
-"transitions": PackedFloat32Array(1, 1),
-"update": 1,
-"values": [&"no", &"no"]
 }
 
 [sub_resource type="Animation" id="Animation_oieil"]
@@ -328,35 +333,34 @@ offset_bottom = 324.0
 custom_minimum_size = Vector2(50, 10)
 layout_direction = 1
 layout_mode = 0
-offset_left = 501.0
-offset_top = 296.0
-offset_right = 870.0
-offset_bottom = 424.0
-scale = Vector2(0.2, 0.2)
-texture_under = ExtResource("8_l6ya2")
-texture_progress = ExtResource("8_l6ya2")
-tint_under = Color(0.0018675321, 0.0018147645, 0.0019523961, 1)
-tint_over = Color(0.11661448, 0.4584781, 0.73483366, 1)
-tint_progress = Color(0.5101858, 0.7633715, 0.20088884, 1)
+offset_left = 379.0
+offset_top = 294.0
+offset_right = 2299.0
+offset_bottom = 523.0
+scale = Vector2(0.1, 0.1)
+texture_under = ExtResource("8_cg2kh")
+texture_over = ExtResource("9_rb7ul")
+texture_progress = ExtResource("10_icjtl")
 
 [node name="SleepBar" type="TextureProgressBar" parent="UI"]
 layout_mode = 0
-offset_left = 501.99997
-offset_top = 266.99997
-offset_right = 871.0
-offset_bottom = 394.99997
-scale = Vector2(0.2, 0.2)
-texture_under = ExtResource("8_l6ya2")
-texture_progress = ExtResource("8_l6ya2")
+offset_left = 179.0
+offset_top = 294.0
+offset_right = 2099.0
+offset_bottom = 523.0
+scale = Vector2(0.1, 0.1)
+texture_under = ExtResource("11_sao6o")
+texture_over = ExtResource("12_6qjax")
+texture_progress = ExtResource("13_88a4u")
 
 [node name="TextureButton" type="TextureButton" parent="UI"]
 layout_mode = 0
-offset_left = 0.99999994
-offset_top = 296.99997
-offset_right = 128.0
-offset_bottom = 427.99997
+offset_left = 3.0
+offset_top = 288.0
+offset_right = 222.0
+offset_bottom = 454.0
 scale = Vector2(0.2, 0.2)
-texture_normal = ExtResource("9_oieil")
+texture_normal = ExtResource("14_0ptlf")
 
 [node name="FadeRect" type="ColorRect" parent="."]
 visible = false

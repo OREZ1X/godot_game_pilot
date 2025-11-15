@@ -1,45 +1,76 @@
-# SaveManager.gd (The Autoload script)
+# SaveManager.gd (Autoload)
 extends Node
 
-const SAVE_PATH: String = "user://uiy_topia.save"
+const SAVE_PATH := "user://uiy_topia.save"
 
-const DECAY_RATE_HUNGER: float = 0.5 # Per second
-const DECAY_RATE_HAPPINESS: float = 0.3
-const DECAY_RATE_ENERGY: float = 0.4
+# Decay per second (adjust as needed)
+const DECAY_HUNGER := 0.5        # lose 0.5 per second
+const DECAY_SLEEPINESS := 0.3    # lose 0.3 per second
 
-# --- 1. SAVE FUNCTION ---
+
+# -------------------------------------
+# SAVE
+# -------------------------------------
 func save_game(pet_data: Dictionary) -> void:
-	# Add the current time to the dictionary for offline decay calculation
 	pet_data["last_save_time"] = Time.get_unix_time_from_system()
-	
-	var file = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
+
+	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if file:
 		file.store_var(pet_data)
-		print("Game Saved!")
+		print("💾 Game Saved!")
 	else:
-		printerr("Failed to open file for saving: ", SAVE_PATH)
+		printerr("❌ Failed to save:", SAVE_PATH)
 
-# --- 2. LOAD FUNCTION ---
+
+# -------------------------------------
+# LOAD
+# -------------------------------------
 func load_game() -> Dictionary:
 	if not FileAccess.file_exists(SAVE_PATH):
-		return {} 
+		print("⚠ No save file found — first time playing.")
+		return get_default_data()
 
-	var file = FileAccess.open(SAVE_PATH, FileAccess.READ)
-	if file:
-		var pet_data: Dictionary = file.get_var()
-		
-		# CORE TAMAGOTCHI LOGIC: OFFLINE DECAY
-		var last_time: int = pet_data.get("last_save_time", Time.get_unix_time_from_system())
-		var current_time: int = Time.get_unix_time_from_system()
-		var time_elapsed: float = float(current_time - last_time)
+	var file := FileAccess.open(SAVE_PATH, FileAccess.READ)
+	if not file:
+		printerr("❌ Save file exists but cannot be opened.")
+		return get_default_data()
 
-		# Apply decay using constants from SaveManager
-		pet_data["hungry"] = max(0.0, pet_data.hungry - DECAY_RATE_HUNGER * time_elapsed)
-		pet_data["happiness"] = max(0.0, pet_data.happiness - DECAY_RATE_HAPPINESS * time_elapsed)
-		pet_data["energy"] = max(0.0, pet_data.energy - DECAY_RATE_ENERGY * time_elapsed)
-		
-		print("Game Loaded! Time elapsed: %s seconds" % time_elapsed)
-		return pet_data
-	else:
-		printerr("Failed to open file for loading: ", SAVE_PATH)
-		return {}
+	var pet_data = file.get_var()
+
+	# If corrupted or empty → return defaults
+	if typeof(pet_data) != TYPE_DICTIONARY:
+		printerr("❌ Save corrupted — using defaults.")
+		return get_default_data()
+
+	# Guarantee required keys exist
+	if not pet_data.has("hunger"): pet_data["hunger"] = 100.0
+	if not pet_data.has("sleepiness"): pet_data["sleepiness"] = 100.0
+	if not pet_data.has("last_save_time"):
+		pet_data["last_save_time"] = Time.get_unix_time_from_system()
+		return pet_data   # first load → no decay yet
+
+	# -------------------------------------
+	# OFFLINE DECAY
+	# -------------------------------------
+	var last_time: int = pet_data["last_save_time"]
+	var now := Time.get_unix_time_from_system()
+	var offline_seconds := float(now - last_time)
+
+	# Reduce values (offline Tamagotchi effect)
+	pet_data["hunger"] = max(0.0, pet_data["hunger"] - DECAY_HUNGER * offline_seconds)
+	pet_data["sleepiness"] = max(0.0, pet_data["sleepiness"] - DECAY_SLEEPINESS * offline_seconds)
+
+	print("⏱ Loaded save. Offline:", offline_seconds, "seconds")
+
+	return pet_data
+
+
+# -------------------------------------
+# Default dictionary
+# -------------------------------------
+func get_default_data() -> Dictionary:
+	return {
+		"hunger": 100.0,
+		"sleepiness": 100.0,
+		"last_save_time": Time.get_unix_time_from_system()
+	}

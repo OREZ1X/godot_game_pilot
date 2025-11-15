@@ -10,19 +10,25 @@ const SAVE_PATH = "user://uiy_topia.save"
 @onready var sleep_bar = $UI/SleepBar
 @onready var fade_rect = $FadeRect
 
+@onready var food_button = $UI/TextureButton
+
 var hunger: float = 100.0
 var sleepiness: float = 100.0
 
+var is_sleeping = false
+
 
 func _ready():
-	var is_first_time = not FileAccess.file_exists(SAVE_PATH)
-	
-	if is_first_time:
+	# First time? No save file → play egg hatching
+	var save_data = SaveManager.load_game()
+
+	if save_data.is_empty():
 		pet.visible = false
 		play_hatching_cutscene()
 	else:
-		cutscene.visible = false
-		load_pet_state()
+		apply_loaded_state(save_data)
+		
+	#food_button.pressed.connect(_on_texture_button_pressed)
 
 
 # -------------------------------
@@ -60,8 +66,33 @@ func _show_pet_after_fade():
 func _process(delta):
 	update_pet_status(delta)
 
-
 func update_pet_status(delta):
+
+	# ------------------------------------
+	# AUTO SLEEP MODE
+	# ------------------------------------
+	if is_sleeping:
+		# Regenerate sleepiness (e.g. +5 per second)
+		sleepiness += delta * 5
+		sleepiness = clamp(sleepiness, 0, 100)
+		sleep_bar.value = sleepiness
+
+		# Play sleep animation (if not already)
+		if anim_player.current_animation != "Sleep":
+			anim_player.play("Sleep")
+			pet.play()
+
+		# When fully rested → wake up
+		if sleepiness >= 100:
+			is_sleeping = false
+			anim_player.play("Idle")
+			pet.play()
+		return   # VERY IMPORTANT → stop other logic!
+
+
+	# ------------------------------------
+	# NORMAL MODE (only when not sleeping)
+	# ------------------------------------
 	hunger -= delta * 0.5
 	sleepiness -= delta * 0.3
 
@@ -71,15 +102,17 @@ func update_pet_status(delta):
 	hunger_bar.value = hunger
 	sleep_bar.value = sleepiness
 
-	# Auto animations depending on status
+	# Enter auto sleep
+	if sleepiness <= 20:
+		is_sleeping = true
+		return
+
+	# Normal animation logic
 	if hunger < 20:
 		anim_player.play("Sad")
 		pet.play()
-	elif sleepiness < 20:
-		anim_player.play("Sleep")
-		pet.play()
 	else:
-		# only play idle if not currently eating or no
+		# if not currently eating or special anim, use idle
 		if not anim_player.is_playing() or anim_player.current_animation in ["Sad","Sleep"]:
 			anim_player.play("Idle")
 			pet.play()
@@ -111,30 +144,47 @@ func load_pet_state():
 
 
 func save_game():
-	var file = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
-	file.store_line("%s,%s" % [hunger, sleepiness])
-	file.close()
+	var data = {
+		"hunger": hunger,
+		"sleepiness": sleepiness,
+	}
 
+	SaveManager.save_game(data)
+	
+func apply_loaded_state(data: Dictionary):
+	hunger = data.get("hunger", 100.0)
+	sleepiness = data.get("sleepiness", 100.0)
+
+	hunger_bar.value = hunger
+	sleep_bar.value = sleepiness
+
+	cutscene.visible = false
+	pet.visible = true
+	
+	_on_cutscene_finished();
+
+	anim_player.play("Idle")
+	pet.play()
 
 # -------------------------------
 # FOOD BUTTON
 # -------------------------------
 func _on_texture_button_pressed() -> void:
 	if hunger >= 90:
-		# play "No"
 		anim_player.play("No")
 		pet.play()
 		await anim_player.animation_finished
 		anim_player.play("Idle")
 		pet.play()
 	else:
-		# play eating
 		anim_player.play("Eating")
 		pet.play()
 		await anim_player.animation_finished
-
-		hunger = min(hunger + 20, 100)
+		hunger += 20
+		hunger = clamp(hunger, 0, 100)
 		hunger_bar.value = hunger
-
+		
 		anim_player.play("Idle")
 		pet.play()
+
+	save_game()
